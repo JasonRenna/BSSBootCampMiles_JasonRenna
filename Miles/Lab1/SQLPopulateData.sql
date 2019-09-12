@@ -1,6 +1,12 @@
+/*
+*MSSQL TavernDB table population
+*Date:	 9/11/2019
+*Author: Jason Renna
+*/
 USE [JRenna_2019]
 GO
-
+/*Populate Tables*/
+--populate Roles
 INSERT INTO dbo.Roles
            ([Name]
            ,[Description])
@@ -12,6 +18,7 @@ INSERT INTO dbo.Roles
            ('Cleaner','Cleans the Tavern'),
            ('Cook','Cooks the food for the customers')
 GO
+--populate Users
 INSERT INTO [dbo].[Users]
            ([Name]
            ,[RoleId])
@@ -24,6 +31,7 @@ INSERT INTO [dbo].[Users]
            ('Lucy Landers',5),
            ('Joe Yander',6)
 GO
+--populate Location
 INSERT INTO [dbo].[Location]
            ([Name])
      VALUES
@@ -33,6 +41,7 @@ INSERT INTO [dbo].[Location]
            ('Pemberton'),
            ('Hainesport')
 GO
+--populate Taverns
 INSERT INTO [dbo].[Taverns]
            ([Name]
            ,[LocationId]
@@ -45,6 +54,7 @@ INSERT INTO [dbo].[Taverns]
            ('Giants Lounge',4,1,5),
            ('Great Hills',5,1,2)
 GO
+--populate BasementRats
 INSERT INTO [dbo].[BasementRats]
            ([Name]
            ,[TavernId])
@@ -55,6 +65,7 @@ INSERT INTO [dbo].[BasementRats]
             ('Mike',4),
 		    ('Sandy',5)
 GO
+--populate Supplies
 INSERT INTO [dbo].[Supplies]
            ([Name]
            ,[Unit])
@@ -65,6 +76,7 @@ INSERT INTO [dbo].[Supplies]
 		   ('Lamb','pound'),
 		   ('Rice','cup')
 GO
+--populate Inventory
 INSERT INTO [dbo].[Inventory]
            ([SupplyId]
            ,[TavernId]
@@ -77,6 +89,7 @@ INSERT INTO [dbo].[Inventory]
 		   (4,1,70,GETDATE()),
 		   (5,1,400,GETDATE())
 GO
+--populate Status
 INSERT INTO [dbo].[Status]
            ([Status])
      VALUES
@@ -86,6 +99,7 @@ INSERT INTO [dbo].[Status]
 		   ('discontinued'),
 		   ('discounted')
 GO
+--populate Services
 INSERT INTO [dbo].[Services]
            ([Name]
            ,[StatusId])
@@ -96,9 +110,7 @@ INSERT INTO [dbo].[Services]
 		   ('Pool',4),
 		   ('Dinner',5)
 GO
-USE [JRenna_2019]
-GO
-
+--populate Sales
 INSERT INTO [dbo].[Sales]
            ([ServiceId]
            ,[GuestId]
@@ -114,6 +126,7 @@ INSERT INTO [dbo].[Sales]
 		   (4,2,1,20.22,1,GETDATE()),
 		   (5,5,1,16.11,1,GETDATE())
 GO
+--populate Receipts
 INSERT INTO [dbo].[Receipts]
            ([SupplyId]
            ,[TavernId]
