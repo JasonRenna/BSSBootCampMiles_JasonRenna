@@ -1,5 +1,5 @@
 /*
-*MSSQL TavernDB table creation and population
+*MSSQL TavernDB table creation, population, and select statements
 *Date:	 9/12/2019
 *Author: Jason Renna
 */
