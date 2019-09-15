@@ -7,6 +7,21 @@ USE [JRenna_2019]
 GO
 
 /*Drop Tables*/
+--drop SupplySales table
+IF OBJECT_ID('dbo.SupplySales', 'U') IS NOT NULL DROP TABLE
+dbo.SupplySales;
+--drop Levels table
+IF OBJECT_ID('dbo.Levels', 'U') IS NOT NULL DROP TABLE
+dbo.Levels;
+--drop Guests table
+IF OBJECT_ID('dbo.Guests', 'U') IS NOT NULL DROP TABLE
+dbo.Guests;
+--drop GuestStatus table
+IF OBJECT_ID('dbo.GuestStatus', 'U') IS NOT NULL DROP TABLE
+dbo.GuestStatus;
+--drop Classes table
+IF OBJECT_ID('dbo.Classes', 'U') IS NOT NULL DROP TABLE
+dbo.Classes;
 --drop Receipts table
 IF OBJECT_ID('dbo.Receipts', 'U') IS NOT NULL DROP TABLE
 dbo.Receipts;
@@ -17,8 +32,8 @@ dbo.Sales;
 IF OBJECT_ID('dbo.Inventory', 'U') IS NOT NULL DROP TABLE
 dbo.Inventory;
 --drop BasementRats table
-IF OBJECT_ID('dbo.BasementRats', 'U') IS NOT NULL DROP TABLE
-dbo.BasementRats;
+--IF OBJECT_ID('dbo.BasementRats', 'U') IS NOT NULL DROP TABLE
+--dbo.BasementRats;
 --drop Taverns table
 IF OBJECT_ID('dbo.Taverns', 'U') IS NOT NULL DROP TABLE
 dbo.Taverns;
@@ -42,6 +57,33 @@ IF OBJECT_ID('dbo.Status', 'U') IS NOT NULL DROP TABLE
 dbo.Status;
 
 /*Create Tables*/
+--create Classes table
+CREATE TABLE dbo.Classes(
+	Id int NOT NULL IDENTITY(1, 1) Primary Key,
+	Name varchar(50) NOT NULL
+);
+--create GuestStatus table
+CREATE TABLE dbo.GuestStatus(
+	Id int NOT NULL IDENTITY(1, 1) Primary Key,
+	Name varchar(50) NOT NULL
+);
+--create Guests table
+CREATE TABLE dbo.Guests(
+	Id int NOT NULL IDENTITY(1, 1) Primary Key,
+	Name varchar(250) NOT NULL,
+	Notes varchar(MAX) NOT NULL,
+	BirthDate date NOT NULL,
+	CakeDay date NOT NULL,
+	StatusId int NOT NULL FOREIGN KEY REFERENCES GuestStatus(Id)
+);
+--create Guests table
+CREATE TABLE dbo.Levels(
+	Id int NOT NULL IDENTITY(1, 1) Primary Key,
+	GuestId int NOT NULL FOREIGN KEY REFERENCES Guests(Id),
+	ClassId int NOT NULL FOREIGN KEY REFERENCES Classes(Id),
+	Level int NOT NULL,
+	Date date NOT NULL
+);
 --create Status table
 CREATE TABLE dbo.Status(
 	Id int NOT NULL IDENTITY(1, 1) Primary Key,
@@ -72,24 +114,32 @@ CREATE TABLE dbo.Roles(
 );
 --create Users table
 CREATE TABLE dbo.Users(
-	Id int NOT NULL IDENTITY(1, 1) Primary Key,
+	Id int NOT NULL IDENTITY(1, 1),
 	Name varchar(250) NOT NULL,
-	RoleId int NOT NULL FOREIGN KEY REFERENCES Roles(Id)
+	RoleId int NOT NULL
 );
+ALTER TABLE dbo.Users
+ADD CONSTRAINT PK_Users PRIMARY KEY (Id),
+	CONSTRAINT FK_Role FOREIGN KEY (RoleId) REFERENCES Roles(Id);
+
 --create Taverns table
 CREATE TABLE dbo.Taverns(
-	Id int NOT NULL IDENTITY(1, 1) Primary Key,
+	Id int NOT NULL IDENTITY(1, 1),
 	Name varchar(250) NOT NULL,
-	LocationId int NOT NULL REFERENCES Location(Id),
-	OwnerId int NOT NULL REFERENCES Users(Id),
+	LocationId int NOT NULL,
+	OwnerId int NOT NULL,
 	Floors int NOT NULL
 );
+ALTER TABLE dbo.Taverns
+ADD CONSTRAINT PK_Taverns PRIMARY KEY (Id),
+	CONSTRAINT FK_Location FOREIGN KEY (LocationId) REFERENCES Location(Id),
+	CONSTRAINT FK_Owner FOREIGN KEY (OwnerId) REFERENCES Users(Id);
 --create BasementRats table
-CREATE TABLE dbo.BasementRats(
-	Id int NOT NULL IDENTITY(1, 1) Primary Key,
-	Name varchar(100) NOT NULL,
-	TavernId int NOT NULL FOREIGN KEY REFERENCES Taverns(Id)
-);
+--CREATE TABLE dbo.BasementRats(
+--	Id int NOT NULL IDENTITY(1, 1) Primary Key,
+--	Name varchar(100) NOT NULL,
+--	TavernId int NOT NULL FOREIGN KEY REFERENCES Taverns(Id)
+--);
 --create Inventory table
 CREATE TABLE dbo.Inventory(
 	Id int NOT NULL IDENTITY(1, 1) Primary Key,
@@ -117,7 +167,62 @@ CREATE TABLE dbo.Sales(
 	Quanity int NOT NULL,
 	Date datetime NOT NULL
 );
+CREATE TABLE dbo.SupplySales(
+	Id int NOT NULL IDENTITY(1, 1) Primary Key,
+	SupplyId int NOT NULL FOREIGN KEY REFERENCES Supplies(Id),
+	SaleId int NOT NULL FOREIGN KEY REFERENCES Sales(Id),
+	Date datetime NOT NULL
+);
 /*Populate Tables*/
+--populate GuestStatus Data
+INSERT INTO [dbo].[GuestStatus]
+           ([Name])
+     VALUES
+           ('Sick'),
+		   ('Angry'),
+		   ('Happy'),
+		   ('Sad'),
+		   ('Nuetral');
+--populate Guests Data
+INSERT INTO [dbo].[Guests]
+           ([Name]
+           ,[Notes]
+           ,[BirthDate]
+           ,[CakeDay]
+           ,[StatusId])
+     VALUES
+           ('John Doe','Very Reputable Adventurer','1975-04-11','2019-04-11',3),
+		  ('Ricky Rocky','Rough personallity','1989-02-13','2019-02-13',2),
+		  --insert error
+		  --('Ricky Rocky','Rough personallity','1989-02-13','2019-02-13',6),
+		  --
+		  ('Matt Door','Needs a shower','1996-12-12','2019-12-12',1),
+		  ('Laz Yee','Never goes on quests','1969-07-2','2019-07-2',4),
+		  ('Mac Burg','Afraid of cows','1970-09-18','2019-09-18',4);
+--populate Classes Data
+INSERT INTO [dbo].[Classes]
+           ([Name])
+     VALUES
+           ('Bard'),
+		   ('Warrior'),
+		   ('Cleric'),
+		   ('Ranger'),
+		   ('Wizzard');
+--populate Levels Data
+INSERT INTO [dbo].[Levels]
+           ([GuestId]
+           ,[ClassId]
+		   ,[Level]
+           ,[Date])
+     VALUES
+           (1,1,99,GETDATE()),
+		   (2,3,45,GETDATE()),
+		   --insert error
+		   --(8,7,45,GETDATE()),
+		   --
+		   (3,4,23,GETDATE()),
+		   (4,2,1,GETDATE()),
+		   (5,5,12,GETDATE());
 --populate Roles
 INSERT INTO dbo.Roles
            ([Name]
@@ -136,6 +241,9 @@ INSERT INTO [dbo].[Users]
      VALUES
            ('Jason Renna',1),
            ('Joe Smith',2),
+		   --insert error
+		   --('Ricky Jacobs',9),
+		   --
            ('Ricky Jacobs',3),
            ('Mary Luck',4),
            ('Jack Mars',2),
@@ -159,19 +267,22 @@ INSERT INTO [dbo].[Taverns]
      VALUES
            ('Shield',1,1,3),
 		   ('Sword',2,1,3),
+		   --insert error
+		   --('The Gnome',3,8,2),
+		   --
            ('The Gnome',3,1,2),
            ('Giants Lounge',4,1,5),
            ('Great Hills',5,1,2);
 --populate BasementRats
-INSERT INTO [dbo].[BasementRats]
-           ([Name]
-           ,[TavernId])
-     VALUES
-			('Bob',1),
-			('Jack',2),
-			('Jim',3),
-            ('Mike',4),
-		    ('Sandy',5);
+--INSERT INTO [dbo].[BasementRats]
+--           ([Name]
+--           ,[TavernId])
+--     VALUES
+--			('Bob',1),
+--			('Jack',2),
+--			('Jim',3),
+--            ('Mike',4),
+--		    ('Sandy',5);
 --populate Supplies
 INSERT INTO [dbo].[Supplies]
            ([Name]
@@ -228,6 +339,17 @@ INSERT INTO [dbo].[Sales]
 		   (3,2,1,76.45,1,GETDATE()),
 		   (4,2,1,20.22,1,GETDATE()),
 		   (5,5,1,16.11,1,GETDATE());
+--populate SupplySales Data
+INSERT INTO [dbo].[SupplySales]
+           ([SupplyId]
+           ,[SaleId]
+           ,[Date])
+     VALUES
+           (1,1,GETDATE()),
+		   (2,2,GETDATE()),
+		   (1,3,GETDATE()),
+		   (5,4,GETDATE()),
+		   (4,5,GETDATE());
 --populate Receipts
 INSERT INTO [dbo].[Receipts]
            ([SupplyId]
@@ -243,7 +365,17 @@ INSERT INTO [dbo].[Receipts]
 		   (5,1,53.22,81,GETDATE());
 /*Table Selects*/
 --Select BasementRats Data
-SELECT * from BasementRats;
+--SELECT * from BasementRats;
+--Select SupplySales Data
+SELECT * from SupplySales;
+--Select Guests Data
+SELECT * from Guests;
+--Select Classes Data
+SELECT * from Classes;
+--Select Levels Data
+SELECT * from Levels;
+--Select GuestStatus Data
+SELECT * from GuestStatus;
 --Select Inventory Data
 SELECT * from Inventory;
 --Select Location Data
