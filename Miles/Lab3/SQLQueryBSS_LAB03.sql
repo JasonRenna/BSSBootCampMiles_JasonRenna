@@ -1,5 +1,6 @@
 /*
 *MSSQL TavernDB table creation and population for Assignment 3
+*Note: Used Assignment 2 to populate my DB for older table data
 *Date:	 9/18/2019
 *Author: Jason Renna
 */
