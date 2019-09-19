@@ -1,6 +1,6 @@
 /*
 *MSSQL TavernDB table creation and population
-*Date:	 9/15/2019
+*Date:	 9/12/2019
 *Author: Jason Renna
 */
 USE [JRenna_2019]
