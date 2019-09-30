@@ -1,6 +1,6 @@
 /*
-*MSSQL TavernDB Build DB Assignment 5
-*Date:	 9/25/2019
+*MSSQL TavernDB Build DB Assignment 6
+*Date:	 9/29/2019
 *Author: Jason Renna
 */
 USE [JRenna_2019]
