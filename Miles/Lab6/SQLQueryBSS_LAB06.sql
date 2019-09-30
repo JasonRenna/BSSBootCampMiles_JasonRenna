@@ -3,7 +3,7 @@ GO
 
 --Procedures and Triggers
 --1 create/alter
-alter procedure findGuestsClass
+create procedure findGuestsClass
 @ClassName varchar(50)
 as
 begin
@@ -16,7 +16,7 @@ end
 go
 
 --2 create/alter
-alter procedure SumGuestsBill
+create procedure SumGuestsBill
 @GuestId int
 as
 begin
@@ -26,7 +26,7 @@ end
 go
 
 --3 create/alter
-alter procedure GuestsLevel
+create procedure GuestsLevel
 @level int, @Range varchar(50) = null
 as
 begin
@@ -54,7 +54,7 @@ go
 /*
 My schema difficult to delete a tavern
 --4 create/alter
-alter procedure deleteTavern
+create procedure deleteTavern
 @TavernId int
 as
 begin
@@ -90,7 +90,7 @@ go
 */
 
 --6 create/alter
-alter procedure BookRoom
+create procedure BookRoom
 @min int, @max int
 as
 begin
