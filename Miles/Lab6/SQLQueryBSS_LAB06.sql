@@ -1,6 +1,7 @@
 USE [JRenna_2019]
 GO
 
+--Procedures and Triggers
 --1 create/alter
 alter procedure findGuestsClass
 @ClassName varchar(50)
@@ -51,6 +52,7 @@ end
 go
 
 /*
+My schema difficult to delete a tavern
 --4 create/alter
 alter procedure deleteTavern
 @TavernId int
@@ -124,6 +126,7 @@ INSERT INTO [dbo].[Sales]
 end
 go
 
+--Executions
 --1
 select * from Classes;
 
